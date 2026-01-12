@@ -1,5 +1,6 @@
 값은 firebase SDK 코드 참조하여 .env 파일에 작성
 
+VITE_APIKEY=
 VITE_AUTHDOMAIN=
 VITE_PROJECTID=
 VITE_SENDERID=
