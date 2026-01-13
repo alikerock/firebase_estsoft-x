@@ -2,7 +2,7 @@ import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import { useState } from 'react';
 import { authService } from '../firebase.js';
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 
 const Auth = () => {
   const auth = authService;
@@ -51,6 +51,28 @@ const Auth = () => {
       //로그인 진행
     }
   }
+  const toggleAccount = () => {
+    setNewAccount(prev => !prev)
+  }
+  const onGoogleSignIn = () => {
+    const provider = new GoogleAuthProvider();
+
+    signInWithPopup(auth, provider)
+      .then((result) => {
+        const credential = GoogleAuthProvider.credentialFromResult(result);
+        const token = credential.accessToken;
+        const user = result.user;
+        console.log(token,user);
+      }).catch((error) => {
+        // Handle Errors here.
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        // const email = error.customData.email;
+        // const credential = GoogleAuthProvider.credentialFromError(error);
+        console.log(errorCode);
+        setError(errorMessage);
+      });
+  }
   return (
     <>
       <h2>{newAccount ? '회원가입' : '로그인'}</h2>
@@ -66,6 +88,14 @@ const Auth = () => {
         <Button type="submit" variant="primary">{newAccount ? '회원가입' : '로그인'}</Button>
         {error && <div>{error}</div>}
       </Form>
+      <hr />
+      <Button variant="info" onClick={onGoogleSignIn}>{newAccount ? 'Google 회원가입' : 'Google 로그인'}</Button>
+      <hr />
+      <div className="text-center">
+        <Button type="submit" variant="secondary" onClick={toggleAccount}>
+          {newAccount ? '로그인으로 전환' : '회원가입으로 전환'}
+        </Button>
+      </div>
     </>
   )
 }
