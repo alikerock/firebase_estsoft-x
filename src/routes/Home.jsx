@@ -4,6 +4,7 @@ import ListGroup from 'react-bootstrap/ListGroup';
 import { useEffect, useState } from 'react';
 import { db } from '../firebase';
 import { collection, addDoc, serverTimestamp, getDocs } from "firebase/firestore";
+import Comment from '../components/Comment';
 
 const Home = () => {
   const [comment, setComment] = useState(''); //새글 입력
@@ -35,6 +36,7 @@ const Home = () => {
   useEffect(() => {
     getComments();    
   }, []);//최초 한번 실행
+
   console.log(comments);
   return (
     <>
@@ -48,7 +50,7 @@ const Home = () => {
       <hr />
       <ListGroup>
         {comments.map(item=>(
-            <ListGroup.Item>{item.comment}</ListGroup.Item>
+           <Comment key={item.id} commentObj={item}/>
           )
         )}            
       </ListGroup>
