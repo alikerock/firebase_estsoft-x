@@ -4,7 +4,7 @@ import Auth from "../routes/Auth";
 import Nav from "./Nav";
 import Profile from "../routes/Profile";
 
-const AppRouter = ({isLoggedIn})=>{ 
+const AppRouter = ({isLoggedIn, userId})=>{ 
 
   return(
     <>
@@ -13,7 +13,7 @@ const AppRouter = ({isLoggedIn})=>{
         {
           isLoggedIn ? 
           <>
-            <Route path="/" element={<Home/>}></Route> 
+            <Route path="/" element={<Home userId={userId} />}></Route> 
             <Route path="/profile" element={<Profile/>}></Route> 
           </>
           : 

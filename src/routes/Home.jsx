@@ -3,10 +3,10 @@ import Button from 'react-bootstrap/Button';
 import ListGroup from 'react-bootstrap/ListGroup';
 import { useEffect, useState } from 'react';
 import { db } from '../firebase';
-import { collection, addDoc, serverTimestamp, getDocs } from "firebase/firestore";
+import { collection, addDoc, serverTimestamp, getDocs, onSnapshot, query, orderBy } from "firebase/firestore";
 import Comment from '../components/Comment';
 
-const Home = () => {
+const Home = ({ userId }) => {
   const [comment, setComment] = useState(''); //새글 입력
   const [comments, setComments] = useState([]); //모든글 조회
   const handleChange = (e) => {
@@ -16,8 +16,9 @@ const Home = () => {
     e.preventDefault();
     try {
       const docRef = await addDoc(collection(db, "comments"), {
-        comment,  //comment: comment,
-        date: serverTimestamp()
+        comment: comment,
+        date: serverTimestamp(),
+        uid: userId
       });
       console.log("새글의 고유 id", docRef.id);
       setComment(''); //입력후 입력칸 비우기
@@ -25,16 +26,26 @@ const Home = () => {
       console.log(e);
     }
   }
-  const getComments = async ()=>{
+  const getComments = async () => {
+    /*
     const querySnapshot = await getDocs(collection(db, "comments"));
     const commentsArray = querySnapshot.docs.map(doc=> ({
       id:doc.id,
       ...doc.data()
     }));
     setComments(commentsArray);
+    */
+    const q = query(collection(db, "comments"),orderBy('date', 'desc'));
+    onSnapshot(q, (querySnapshot) => {
+      const commentsArray = querySnapshot.docs.map(doc=> ({
+        id:doc.id,
+        ...doc.data()
+      }));    
+      setComments(commentsArray);
+    });
   }
   useEffect(() => {
-    getComments();    
+    getComments();
   }, []);//최초 한번 실행
 
   console.log(comments);
@@ -49,10 +60,10 @@ const Home = () => {
       </Form>
       <hr />
       <ListGroup>
-        {comments.map(item=>(
-           <Comment key={item.id} commentObj={item}/>
-          )
-        )}            
+        {comments.map(item => (
+          <Comment key={item.id} commentObj={item} isOwner={item.uid === userId} />
+        )
+        )}
       </ListGroup>
     </>
   )
