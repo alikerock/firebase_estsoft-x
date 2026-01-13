@@ -10,6 +10,7 @@ const Auth = () => {
   // const [password, setPassword] = useState('');
   const [input, setInput] = useState({ email: '', password: '' });
   const [newAccount, setNewAccount] = useState(true); //회원가입,로그인 구분할 변수, 기본값은 회원가입 true
+  const [error, setError] = useState(''); //에러문구
 
   const handleChange = (e) => {
     /*
@@ -44,6 +45,7 @@ const Auth = () => {
           const errorCode = error.code;
           const errorMessage = error.message;
           console.log(errorCode, errorMessage);
+          setError(errorMessage);
         });
     } else {
       //로그인 진행
@@ -62,6 +64,7 @@ const Auth = () => {
           <Form.Control type="password" name="password" placeholder="Password" onChange={handleChange} />
         </Form.Group>
         <Button type="submit" variant="primary">{newAccount ? '회원가입' : '로그인'}</Button>
+        {error && <div>{error}</div>}
       </Form>
     </>
   )
