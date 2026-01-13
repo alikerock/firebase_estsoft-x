@@ -9,7 +9,7 @@ function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [init, setInit] = useState(false); //초기화 메시지 출력 여부
   const auth = authService;
-
+  console.log(auth);
   useEffect(()=>{
     onAuthStateChanged(auth, (user) => {
       if (user) {//로그인된 유저 정보가 있다면
