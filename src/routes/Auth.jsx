@@ -33,6 +33,7 @@ const Auth = () => {
     e.preventDefault();
     if (newAccount) {
       //회원가입 진행
+      console.log('회원가입 진행');
       createUserWithEmailAndPassword(auth, input.email, input.password)
         .then((userCredential) => {
           // Signed up 
@@ -60,7 +61,7 @@ const Auth = () => {
           <Form.Label>Password</Form.Label>
           <Form.Control type="password" name="password" placeholder="Password" onChange={handleChange} />
         </Form.Group>
-        <Button variant="primary">{newAccount ? '회원가입' : '로그인'}</Button>
+        <Button type="submit" variant="primary">{newAccount ? '회원가입' : '로그인'}</Button>
       </Form>
     </>
   )
