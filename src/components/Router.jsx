@@ -1,10 +1,18 @@
 import { Routes, Route } from "react-router-dom";
 import Home from '../routes/Home';
+import Auth from "../routes/Auth";
 
-const AppRouter = ()=>{
+const AppRouter = ({isLoggedIn})=>{ 
+
   return(
     <Routes>
-      <Route path="/" element={<Home/>}></Route>
+      {
+        isLoggedIn ? 
+        <Route path="/" element={<Home/>}></Route> 
+        : 
+        <Route path="/" element={<Auth/>}></Route> 
+      }
+      
     </Routes>
   )
 }
