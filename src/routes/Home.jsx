@@ -1,28 +1,41 @@
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { db } from '../firebase';
-import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+import { collection, addDoc, serverTimestamp, getDocs } from "firebase/firestore";
 
 
 const Home = () => {
-  const [comment, setComment] = useState('');
+  const [comment, setComment] = useState(''); //새글 입력
+  const [comments, setComments] = useState([]); //모든글 조회
   const handleChange = (e) => {
     setComment(e.target.value);
   }
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try{
+    try {
       const docRef = await addDoc(collection(db, "comments"), {
         comment,  //comment: comment,
         date: serverTimestamp()
       });
       console.log("새글의 고유 id", docRef.id);
       setComment(''); //입력후 입력칸 비우기
-    } catch(e){
+    } catch (e) {
       console.log(e);
     }
   }
+  const getComments = async ()=>{
+    const querySnapshot = await getDocs(collection(db, "comments"));
+    const commentsArray = querySnapshot.docs.map(doc=> ({
+      id:doc.id,
+      ...doc.data()
+    }));
+    setComments(commentsArray);
+  }
+  useEffect(() => {
+    getComments();    
+  }, []);//최초 한번 실행
+  console.log(comments);
   return (
     <>
       <Form className="mt-3" onSubmit={handleSubmit}>
