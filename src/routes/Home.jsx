@@ -1,9 +1,9 @@
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
+import ListGroup from 'react-bootstrap/ListGroup';
 import { useEffect, useState } from 'react';
 import { db } from '../firebase';
 import { collection, addDoc, serverTimestamp, getDocs } from "firebase/firestore";
-
 
 const Home = () => {
   const [comment, setComment] = useState(''); //새글 입력
@@ -45,6 +45,13 @@ const Home = () => {
         </Form.Group>
         <Button type="submit" variant="primary">새글 입력</Button>
       </Form>
+      <hr />
+      <ListGroup>
+        {comments.map(item=>(
+            <ListGroup.Item>{item.comment}</ListGroup.Item>
+          )
+        )}            
+      </ListGroup>
     </>
   )
 }
