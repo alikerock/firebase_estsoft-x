@@ -1,0 +1,15 @@
+.profile{
+  margin-bottom: 10px;
+}
+.profile img{
+  display: block;
+  width: 100px;
+  height: 100px;
+  object-fit: size;
+  border-radius:50%;
+  border:2px solid #ccc;
+}
+
+.hidden{
+  display: none;
+}
