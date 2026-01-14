@@ -1,9 +1,10 @@
 import Form from 'react-bootstrap/Form';
 import ListGroup from 'react-bootstrap/ListGroup';
 import Button from 'react-bootstrap/Button';
-import { db } from '../firebase';
+import { db, storageService } from '../firebase';
 import { doc, deleteDoc, updateDoc } from "firebase/firestore";
 import { useState } from 'react';
+import { ref, deleteObject } from "firebase/storage";
 
 const Comment = ({ commentObj, isOwner }) => {
   const [edit, setEdit] = useState(false); //수정모드, 기본값 수정모드x
@@ -13,6 +14,9 @@ const Comment = ({ commentObj, isOwner }) => {
     const deleteConfirm = window.confirm('정말 삭제할까요?');
     if(deleteConfirm){
       await deleteDoc(doc(db, "comments", commentObj.id));
+      //삭제할 이미지 참조 생성, 참조에 이미지 제거
+      const fileRef = ref(storageService, commentObj.image);
+      deleteObject(fileRef);
     }
   }
   const toggleEditMode = ()=>{
