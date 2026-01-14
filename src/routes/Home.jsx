@@ -5,7 +5,7 @@ import { useEffect, useState, useRef } from 'react';
 import { db, storageService } from '../firebase';
 import { collection, addDoc, serverTimestamp, getDocs, onSnapshot, query, orderBy } from "firebase/firestore";
 import Comment from '../components/Comment';
-import { ref, uploadString } from "firebase/storage";
+import { ref, uploadString, getDownloadURL} from "firebase/storage";
 import { v4 as uuidv4 } from 'uuid';
 console.log(storageService);
 
@@ -23,24 +23,25 @@ const Home = ({ userId }) => {
     e.preventDefault();
     const storage = storageService;
     const storageRef = ref(storage, `${userId}/${uuidv4()}`); //저장할 파일의 참조 생성
-    
-    uploadString(storageRef, attachment, 'data_url').then(() => {
-      console.log('파일 업로드 완료');
-    });
-    /*
+    let imageURL = null;
+    if(attachment){
+      const snapshot = await uploadString(storageRef, attachment, 'data_url'); //업로드후 이미지 정보를 할당
+      imageURL = await getDownloadURL(snapshot.ref);//업로드된 이미지의 절대 경로 할당
+      console.log(imageURL);
+    }
     try {
-      const docRef = await addDoc(collection(db, "comments"), {
+      await addDoc(collection(db, "comments"), {
         comment: comment,
         date: serverTimestamp(),
-        uid: userId
-        image:첨부한 이미지의 절대 경로
+        uid: userId,
+        image:imageURL
       });
-      console.log("새글의 고유 id", docRef.id);
+      //console.log("새글의 고유 id", docRef.id);
       setComment(''); //입력후 입력칸 비우기
     } catch (e) {
       console.log(e);
     }
-    */
+    
   }
   const getComments = async () => {
     /*
