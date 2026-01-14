@@ -2,7 +2,7 @@ import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import { useState } from 'react';
 import { authService } from '../firebase.js';
-import { createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 
 const Auth = () => {
   const auth = authService;
@@ -36,10 +36,10 @@ const Auth = () => {
       //회원가입 진행
       console.log('회원가입 진행');
       createUserWithEmailAndPassword(auth, input.email, input.password)
-        .then((userCredential) => {
-          // Signed up 
-          const user = userCredential.user;
-          console.log(user);
+        .then(() => {
+          // 회원가입 완료 후 
+          // const user = userCredential.user;
+          // console.log(user);
         })
         .catch((error) => {
           const errorCode = error.code;
@@ -48,7 +48,18 @@ const Auth = () => {
           setError(errorMessage);
         });
     } else {
-      //로그인 진행
+      //로그인 진행  
+      signInWithEmailAndPassword(auth, input.email, input.password)
+        .then(() => {
+          // 로그인 완료 후 
+          // const user = userCredential.user;
+          // ...
+        })
+        .catch((error) => {
+          //const errorCode = error.code;
+          const errorMessage = error.message;
+          setError(errorMessage);
+        });      
     }
   }
   const toggleAccount = () => {
