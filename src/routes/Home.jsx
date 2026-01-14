@@ -38,6 +38,7 @@ const Home = ({ userId }) => {
       });
       //console.log("새글의 고유 id", docRef.id);
       setComment(''); //입력후 입력칸 비우기
+      handleFileCancel();//첨부이미지 초기화
     } catch (e) {
       console.log(e);
     }

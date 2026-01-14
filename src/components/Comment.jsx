@@ -43,8 +43,9 @@ const Comment = ({ commentObj, isOwner }) => {
             </div>
           </Form>   
           : 
-          <div className='d-flex justify-content-between'>
+          <div className='d-flex justify-content-between align-items-center'>
             {commentObj.comment}
+            {commentObj.image && <img src={commentObj.image} alt="" width="50px" height="50px" />}
             {
               isOwner && <div className='d-flex gap-1'>
                 <Button variant="secondary" size="sm" onClick={toggleEditMode}>수정</Button>
