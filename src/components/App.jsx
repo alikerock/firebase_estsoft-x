@@ -10,6 +10,7 @@ function App() {
   const [init, setInit] = useState(false); //초기화 메시지 출력 여부
   const [userId, setUserId] = useState(null);
   const auth = authService;
+  console.log(auth);
 
   useEffect(()=>{
     onAuthStateChanged(auth, (user) => {

@@ -49,7 +49,7 @@ const Profile = () => {
     });
   }  
   useEffect(()=>{
-    user.photoURL.includes('firebase') && setProfile(user.photoURL);
+    user.photoURL?.includes('firebase') && setProfile(user.photoURL);
     getComments();
   },[]);
 
