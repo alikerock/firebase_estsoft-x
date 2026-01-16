@@ -2,7 +2,7 @@ import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import { useState } from 'react';
 import { authService } from '../firebase.js';
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, GithubAuthProvider } from "firebase/auth";
 
 const Auth = () => {
   const auth = authService;
@@ -59,7 +59,7 @@ const Auth = () => {
           //const errorCode = error.code;
           const errorMessage = error.message;
           setError(errorMessage);
-        });      
+        });
     }
   }
   const toggleAccount = () => {
@@ -73,7 +73,7 @@ const Auth = () => {
         const credential = GoogleAuthProvider.credentialFromResult(result);
         const token = credential.accessToken;
         const user = result.user;
-        console.log(token,user);
+        console.log(token, user);
       }).catch((error) => {
         // Handle Errors here.
         const errorCode = error.code;
@@ -82,6 +82,32 @@ const Auth = () => {
         // const credential = GoogleAuthProvider.credentialFromError(error);
         console.log(errorCode);
         setError(errorMessage);
+      });
+  }
+  const onGithubSignIn = () => {
+    const provider = new GithubAuthProvider();
+    signInWithPopup(auth, provider)
+      .then((result) => {
+        const credential = GithubAuthProvider.credentialFromResult(result);
+        const token = credential.accessToken;    
+        const user = result.user; 
+        console.log(token,user);
+      }).catch((error) => {
+        const errorMessage = error.message;
+        const email = error.customData?.email;
+
+        if(error.code === "auth/account-exists-with-different-credential"){
+            if(email){
+              alert(`이미 가입된 이메일 주소가 있습니다.\n\n이메일:${email}\n\n 해당 이메일로 로그인을 해주세요`);
+            }else{
+               alert(`이미 다른 방식으로 가입한 계정이 있습니다.\n\n 해당 이메일 확인후 로그인해주세요`);
+            }
+        }
+        
+        const credential = GithubAuthProvider.credentialFromError(error);
+        console.log(email, credential)
+        setError(errorMessage);
+        // ...
       });
   }
   return (
@@ -100,7 +126,10 @@ const Auth = () => {
         {error && <div>{error}</div>}
       </Form>
       <hr />
-      <Button variant="info" onClick={onGoogleSignIn}>{newAccount ? 'Google 회원가입' : 'Google 로그인'}</Button>
+      <div className="d-flex justify-content-center gap-1">
+        <Button variant="info" onClick={onGoogleSignIn}>{newAccount ? 'Google 회원가입' : 'Google 로그인'}</Button>
+        <Button variant="info" onClick={onGithubSignIn}>{newAccount ? 'Github 회원가입' : 'Github 로그인'}</Button>
+      </div>
       <hr />
       <div className="text-center">
         <Button type="submit" variant="secondary" onClick={toggleAccount}>
